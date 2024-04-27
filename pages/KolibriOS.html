@@ -1,0 +1,67 @@
+<!doctype html>
+<title>KolibriOS Basic Emulator</title>
+
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<script src="../build/libv86.js"></script>
+<script>
+"use strict";
+
+window.onload = function()
+{
+    var container_Kolibri = document.getElementById("screen_container_KolibriOS");
+    var container_Linux4 = document.getElementById("screen_container_Linux4");
+
+    function lockPointer() {
+        container_Kolibri.requestPointerLock();
+    }
+
+    container_Kolibri.addEventListener("click", lockPointer, false);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.exitPointerLock();
+        }
+    })
+    
+    var emulator_Kolibri = window.emulator = new V86({
+        wasm_path: "../build/v86.wasm",
+        memory_size: 512 * 1024 * 1024,
+        vga_memory_size: 8 * 1024 * 1024,
+        screen_container: container_Kolibri,
+        bios: {
+            url: "../bios/seabios.bin", 
+        },
+        vga_bios: {
+            url: "../bios/vgabios.bin",
+        },
+        fda: {
+            url: "../images/kolibri.img", // name of the iso file in use.
+        },
+        autostart: true,
+    });
+};
+</script>
+
+<body>
+    <header>
+        <nav>
+            <div class="header-left">
+                <h1>Basic Emulator</h1>
+            </div>
+            <div class="header-right">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../pages/SetupVM.html">Setup VM</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <h1>KolibriOS v86</h1>
+    <div id="outside">
+        <div id="screen_container_KolibriOS" class="emulator">
+            <div class="inside_emulator" style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+            <canvas style="display: none"></canvas>
+        </div>
+    </div>
+</body>

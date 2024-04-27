@@ -1,0 +1,68 @@
+<!doctype html>
+<title>Ubuntu - Basic Emulator</title>
+
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<script src="../build/libv86.js"></script>
+<script>
+"use strict";
+
+window.onload = function()
+{
+    var container_ubuntu = document.getElementById("screen_container_ubuntu");
+
+    function lockPointer() {
+        container_ubuntu.requestPointerLock();
+    }
+
+    container_ubuntu.addEventListener("click", lockPointer, false);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.exitPointerLock();
+        }
+    })
+    
+    var emulator_ubuntu = window.emulator = new V86({
+        wasm_path: "../build/v86.wasm",
+        memory_size: 512 * 1024 * 1024,
+        vga_memory_size: 8 * 1024 * 1024,
+        screen_container: container_ubuntu,
+        bios: {
+            url: "../bios/seabios.bin", 
+        },
+        vga_bios: {
+            url: "../bios/vgabios.bin",
+        },
+        cdrom: {
+            url: "../iso/ubuntu-16.04.6-desktop-i386.iso", // name of the iso file in use.
+        },
+        autostart: true,
+    });
+};
+</script>
+
+<body>
+    <header>
+        <nav>
+            <div class="header-left">
+                <h1>Basic Emulator</h1>
+            </div>
+            <div class="header-right">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../pages/SetupVM.html">Setup VM</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <h1>Ubuntu v86</h1>
+    <div id="outside">
+        <div id="screen_container_ubuntu" class="emulator">
+            <div class="inside_emulator" style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+            <canvas style="display: none"></canvas>
+        </div>    
+    </div>
+    <br><br><br><br>
+    <p>Ubuntu is currently not functional due to issues with emulating file systems and networking.</p>
+</body>
